@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Song } from './song.entity';
-import { Artist } from 'src/artists/artists';
+import { Artist } from 'src/artists/artists.entity';
 import { CreateSongDTO } from './dto/create_dto_songs';
 import { UpdateSongDto } from './dto/update_dto_songs';
 import {
@@ -38,7 +38,7 @@ export class SongsService {
   }
 
   findOne(id: number): Promise<Song> {
-    return this.songRepository.findOneBy({ id });
+    return this.songsRepository.findOneBy({ id });
   }
 
   remove(id: number): Promise<DeleteResult> {

@@ -1,4 +1,4 @@
-import { Artist } from 'src/artists/artists';
+import { Artist } from 'src/artists/artists.entity';
 import { Playlist } from 'src/playlist/playlist.entity';
 import {
   Column,
@@ -31,7 +31,7 @@ export class Song {
 
   @ManyToMany(() => Artist, (artist) => artist.songs, { cascade: true })
   @JoinTable({ name: 'songs_artists' })
-  artists: Artist[];
+  artist: Artist[];
 
   /**
    * Many songs can belong to playlist for each unique user
