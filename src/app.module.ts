@@ -16,6 +16,8 @@ import { User } from './users/user.entity';
 import { Playlist } from './playlist/playlist.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaylistModule } from './playlist/playlist.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthenticationController } from './authentication/authentication.controller';
 
 @Module({
   imports: [
@@ -31,8 +33,9 @@ import { PlaylistModule } from './playlist/playlist.module';
     }),
     SongsModule,
     PlaylistModule,
+    AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthenticationController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
