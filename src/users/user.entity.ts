@@ -5,14 +5,32 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column()
-  firstname: string;
+  firstName: string;
+
   @Column()
-  lastname: string;
-  @Column()
+  lastName: string;
+
+  @Column({ unique: true })
   email: string;
+
   @Column()
+  @Exclude()
   password: string;
-  @OneToMany(() => Playlist, (Playlist) => Playlist.user)
-  playlist: Playlist[];
+
+  @Column({ nullable: true, type: 'text' })
+  twoFASecret: string;
+
+  @Column({ default: false, type: 'boolean' })
+  enable2FA: boolean;
+
+  @Column()
+  apiKey: string;
+
+  /**
+   * A user can create many playLists
+   */
+  @OneToMany(() => Playlist, (playList) => playList.user)
+  playLists: Playlist[];
 }
