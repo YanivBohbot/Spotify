@@ -17,7 +17,8 @@ import { Playlist } from './playlist/playlist.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaylistModule } from './playlist/playlist.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthenticationController } from './authentication/authentication.controller';
+import { UsersModule } from './users/users/users.module';
+import { ArtistsModule } from './artists/artists/artists.module';
 
 @Module({
   imports: [
@@ -34,16 +35,14 @@ import { AuthenticationController } from './authentication/authentication.contro
     SongsModule,
     PlaylistModule,
     AuthModule,
+    UsersModule,
+    ArtistsModule,
   ],
-  controllers: [AppController, AuthenticationController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    //   consumer
-    //     .apply(LoggerMiddleware)
-    //     .forRoutes({ path: 'songs', method: RequestMethod.POST });
-    // }
     consumer.apply(LoggerMiddleware).forRoutes(SongsController);
   }
 }
