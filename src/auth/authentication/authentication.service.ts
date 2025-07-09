@@ -1,27 +1,40 @@
-import { Injectable } from '@nestjs/common';
-
-import { LoginDTO } from '../dto/LoginDTO';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from 'src/users/users.service';
+import { LoginDTO } from './dto/login.dto';
 import { User } from 'src/users/user.entity';
-import { UsersService } from 'src/users/users/users.service';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { PayloadType } from './types';
+import { ArtistService } from 'src/artists/artist.service';
 
 @Injectable()
 export class AuthenticationService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+    private artistService: ArtistService,
+  ) {}
 
-  async login(loginDTO: LoginDTO): Promise<User> {
-    const user = await this.userService.findOne(loginDTO); // 1.
-
+  async login(loginDTO: LoginDTO): Promise<{ accessToken: string }> {
+    const user = await this.userService.findOne(loginDTO);
     const passwordMatched = await bcrypt.compare(
       loginDTO.password,
       user.password,
-    ); // 2.
+    );
 
     if (passwordMatched) {
-      //3
-      delete user.password; // 4.
-      return user;
+      delete user.password;
+      const payload: PayloadType = { email: user.email, userId: user.id };
+      const artist = await this.artistService.findArtist(user.id);
+
+      if (artist) {
+        payload.artistId = artist.id;
+      }
+      return {
+        accessToken: this.jwtService.sign(payload),
+      };
     } else {
-      throw new UnauthorizedException('Password does not match'); // 5.
+      throw new UnauthorizedException('Passowrd doenst not math');
     }
   }
 }
